@@ -23,17 +23,28 @@ export const addChannel = createAsyncThunk(
 
 const channelsEntityAdapter = createEntityAdapter();
 
+const getInitialChannel = () => {
+  const storageValue = localStorage.currentChannel || 'general';
+  return storageValue;
+};
+
 const initialState = channelsEntityAdapter.getInitialState({
   loading: 'idle',
   adding: 'idle',
   loadingError: null,
   addingError: null,
+  current: getInitialChannel(),
 });
 
 const channelsSlice = createSlice({
   name: 'channels',
   initialState,
-  reducers: {},
+  reducers: {
+    selectChannel: (state, { payload }) => {
+      state.current = payload.channelId;
+      localStorage.currentChannel = payload.channelId;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchData.pending, (state) => {
@@ -67,5 +78,7 @@ const channelsSlice = createSlice({
       });
   },
 });
+
+export const { selectChannel } = channelsSlice.actions;
 
 export default channelsSlice.reducer;
