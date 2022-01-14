@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   Button, Nav, Form,
 } from 'react-bootstrap';
+import PlusIcon from 'bootstrap-icons/icons/plus-square.svg';
 
 import { selectChannel, addChannel } from '../slices/channelsSlice';
 import {
@@ -43,7 +44,7 @@ const Channels = () => {
             onClick={handleClick}
             className="w-100 rounded-0 text-start"
           >
-            #
+            <span className="me-1">#</span>
             {channel.name}
           </Button>
         </Nav.Item>
@@ -56,23 +57,24 @@ const Channels = () => {
   return (
     <>
       <div className="px-2 pt-5">
-        <div className="mb-3">
+        <div className="mb-2">
           <div
             style={{ alignItems: 'center' }}
-            className="d-flex justify-content-between px-2"
+            className="d-flex justify-content-between ps-2"
           >
             <span>
               channels
             </span>
             {!ui.newChannelForm.isShow && (
-              <Button
-                size="sm"
-                variant="outline-primary"
-                type="button"
-                onClick={handleAddButtonClick}
-              >
-                +
-              </Button>
+            <Button
+              size="sm"
+              type="button"
+              variant={false}
+              onClick={handleAddButtonClick}
+              className="p-0 m-0 text-primary"
+            >
+              <PlusIcon width={20} height={20} />
+            </Button>
             )}
           </div>
           {ui.newChannelForm.isShow && (

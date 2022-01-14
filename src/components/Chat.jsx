@@ -1,6 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { InputGroup, FormControl, Button } from 'react-bootstrap';
+import {
+  Form, InputGroup, FormControl, Button,
+} from 'react-bootstrap';
+import ArrowRightIcon from 'bootstrap-icons/icons/arrow-right.svg';
 
 const messages = Array.from({ length: 20 }).map((_, ind) => ({
   id: ind,
@@ -11,7 +14,7 @@ const messages = Array.from({ length: 20 }).map((_, ind) => ({
 const Messages = () => (
   <div>
     {messages.map((msg) => (
-      <div key={msg.id}>
+      <div key={msg.id} className="mb-2">
         <strong>
           {msg.author}
         </strong>
@@ -23,12 +26,14 @@ const Messages = () => (
 );
 
 const Input = () => (
-  <div className="mt-auto">
+  <Form className="mt-auto">
     <InputGroup>
       <FormControl />
-      <Button variant="outline-primary">Send</Button>
+      <Button variant="outline-primary">
+        <ArrowRightIcon width={24} height={24} />
+      </Button>
     </InputGroup>
-  </div>
+  </Form>
 );
 
 const Chat = () => {
@@ -48,7 +53,7 @@ const Chat = () => {
       <div className="px-4 overflow-auto">
         <Messages />
       </div>
-      <div className="mt-auto ps-4 pe-5 py-2">
+      <div className="mt-auto ps-4 pe-5 py-3">
         <Input />
       </div>
     </div>

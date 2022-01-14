@@ -21,7 +21,12 @@ const Header = () => {
     <Navbar>
       <Container>
         <Navbar.Brand>Slack chat</Navbar.Brand>
-        <Button onClick={handleLogOut}>Log out</Button>
+        <Button
+          size="sm"
+          onClick={handleLogOut}
+        >
+          Log out
+        </Button>
       </Container>
     </Navbar>
   );
