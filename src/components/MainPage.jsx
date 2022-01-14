@@ -39,10 +39,10 @@ const MainPage = () => {
       <Header />
       <Container fluid="md" className="shadow rounded overflow-hidden my-4 h-100">
         <Row className="h-100">
-          <Col md={2} className="px-0 bg-light border-end">
+          <Col md={2} className="px-0 h-100 bg-light border-end">
             <Channels />
           </Col>
-          <Col md className="px-0">
+          <Col md className="px-0 h-100">
             <Chat />
           </Col>
         </Row>
