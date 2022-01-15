@@ -3,48 +3,138 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Dropdown, Button, ButtonGroup, Nav, Form,
+  Dropdown, Button, ButtonGroup, Nav, Form, Modal,
 } from 'react-bootstrap';
 import PlusIcon from 'bootstrap-icons/icons/plus-square.svg';
 
-import { selectChannel, addChannel, removeChannel } from '../slices/channelsSlice';
 import {
-  changeNewChannelName, showNewChannelForm, resetNewChannelForm,
+  selectChannel, addChannel, removeChannel, renameChannel,
+} from '../slices/channelsSlice';
+import {
+  showNewChannelModal, showRenameChannelModal, hideModal,
 } from '../slices/uiSlice';
 import { useWebsocket } from '../hooks';
 
-const Channels = () => {
+const NewChannelModal = () => {
   const dispatch = useDispatch();
-  const ui = useSelector((state) => state.ui);
-  const channels = useSelector((state) => state.channels);
-  const currentChannelId = channels.current;
-
   const { socket } = useWebsocket();
-
-  const handleAddButtonClick = () => {
-    dispatch(showNewChannelForm(true));
-  };
-
-  const handleNewChannelNameChange = (e) => {
-    dispatch(changeNewChannelName({ name: e.target.value }));
-  };
+  const [name, setName] = React.useState('');
+  const modal = useSelector((state) => state.ui.modal);
+  const show = modal.name === 'newChannel';
 
   const handleNewChannelSubmit = (e) => {
     e.preventDefault();
-    socket.emit('newChannel', { name: ui.newChannelForm.name }, ({ data }) => {
+    socket.emit('newChannel', { name }, ({ data }) => {
       dispatch(addChannel(data));
-      dispatch(resetNewChannelForm());
+      setName('');
+      hideModal();
     });
+  };
+
+  const handleNewChannelNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleClose = () => {
+    dispatch(hideModal());
+    setName('');
+  };
+
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Form onSubmit={handleNewChannelSubmit}>
+        <Modal.Header>
+          <Modal.Title>Новый канал</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Form.Control
+            type="text"
+            size="sm"
+            value={name}
+            onChange={handleNewChannelNameChange}
+          />
+          <Button variant="secondary" onClick={handleClose}>Отмена</Button>
+          <Button type="submit" variant="primary">Добавить</Button>
+        </Modal.Footer>
+      </Form>
+    </Modal>
+  );
+};
+
+const RenameChannelModal = () => {
+  const dispatch = useDispatch();
+  const { socket } = useWebsocket();
+  const modal = useSelector((state) => state.ui.modal);
+  const show = modal.name === 'renameChannel';
+  const { channel } = modal;
+  const [name, setName] = React.useState('');
+
+  React.useEffect(() => {
+    if (channel) setName(channel.name);
+  }, [show]);
+
+  const handleRenameChannelSubmit = (e) => {
+    e.preventDefault();
+    const payload = { id: channel.id, name };
+    socket.emit('renameChannel', payload, () => {
+      dispatch(renameChannel(payload));
+      setName('');
+      dispatch(hideModal());
+    });
+  };
+
+  const handleNewChannelNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleClose = () => {
+    dispatch(hideModal());
+    setName('');
+  };
+
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Form onSubmit={handleRenameChannelSubmit}>
+        <Modal.Header>
+          <Modal.Title>Переименовать канал</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Form.Control
+            type="text"
+            size="sm"
+            value={name}
+            onChange={handleNewChannelNameChange}
+          />
+          <Button variant="secondary" onClick={handleClose}>Отмена</Button>
+          <Button type="submit" variant="primary">Сохранить</Button>
+        </Modal.Footer>
+      </Form>
+    </Modal>
+  );
+};
+
+const Channels = () => {
+  const dispatch = useDispatch();
+  const channels = useSelector((state) => state.channels);
+  const currentChannelId = channels.current;
+  const { socket } = useWebsocket();
+
+  const handleAddButtonClick = () => {
+    dispatch(showNewChannelModal());
   };
 
   const handleClick = (id) => () => dispatch(selectChannel({ channelId: id }));
 
-  const handleOptionSelect = (id) => (eventKey) => {
+  const handleOptionSelect = (channel) => (eventKey) => {
     if (eventKey === 'remove') {
+      const { id } = channel;
       socket.emit('removeChannel', { id }, () => {
         dispatch(removeChannel(id));
         if (currentChannelId === id) dispatch(selectChannel({ channelId: 1 }));
       });
+    }
+    if (eventKey === 'rename') {
+      dispatch(showRenameChannelModal({ channel }));
     }
   };
 
@@ -57,7 +147,7 @@ const Channels = () => {
       const btnVariant = isCurrent ? 'secondary' : null;
 
       const btn = channel.removable ? (
-        <Dropdown as={ButtonGroup} className="w-100" onSelect={handleOptionSelect(id)}>
+        <Dropdown as={ButtonGroup} className="w-100" onSelect={handleOptionSelect({ id, ...channel })}>
           <Button
             className="w-100 rounded-0 text-start"
             variant={btnVariant}
@@ -113,7 +203,6 @@ const Channels = () => {
             <span>
               channels
             </span>
-            {!ui.newChannelForm.isShow && (
             <Button
               size="sm"
               type="button"
@@ -123,18 +212,7 @@ const Channels = () => {
             >
               <PlusIcon width={20} height={20} />
             </Button>
-            )}
           </div>
-          {ui.newChannelForm.isShow && (
-            <Form onSubmit={handleNewChannelSubmit}>
-              <Form.Control
-                type="text"
-                size="sm"
-                value={ui.newChannelForm.name}
-                onChange={handleNewChannelNameChange}
-              />
-            </Form>
-          )}
           {channels.loading === 'loading' && (
             <div className="text-muted">
               Loading channels
@@ -143,6 +221,8 @@ const Channels = () => {
         </div>
         {channels.loading === 'idle' && renderChannels()}
       </div>
+      <NewChannelModal />
+      <RenameChannelModal />
     </>
   );
 };

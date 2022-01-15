@@ -5,37 +5,34 @@ import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 const uiEntityAdapter = createEntityAdapter();
 
 const initialState = uiEntityAdapter.getInitialState({
-  newChannelForm: {
-    isShow: false,
-    name: '',
-  },
+  modal: { name: null },
 });
 
 const uiSlice = createSlice({
-  name: 'channels',
+  name: 'ui',
   initialState,
   reducers: {
-    changeNewChannelName: (state, { payload }) => {
-      state.newChannelForm.name = payload.name;
+    showNewChannelModal: (state) => {
+      state.modal = {
+        name: 'newChannel',
+      };
     },
-    showNewChannelForm: (state) => {
-      state.newChannelForm.isShow = true;
+    showRenameChannelModal: (state, { payload }) => {
+      state.modal = {
+        name: 'renameChannel',
+        channel: payload.channel,
+      };
     },
-    hideNewChannelForm: (state) => {
-      state.newChannelForm.isShow = false;
-    },
-    resetNewChannelForm: (state) => {
-      state.newChannelForm.name = '';
-      state.newChannelForm.isShow = false;
+    hideModal: (state) => {
+      state.modal = initialState.modal;
     },
   },
 });
 
 export const {
-  changeNewChannelName,
-  showNewChannelForm,
-  hideNewChannelForm,
-  resetNewChannelForm,
+  showNewChannelModal,
+  showRenameChannelModal,
+  hideModal,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
