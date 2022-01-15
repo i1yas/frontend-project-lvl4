@@ -39,7 +39,7 @@ const Input = () => (
 const Chat = () => {
   const currentChannel = useSelector((state) => {
     const { channels } = state;
-    const { id } = channels;
+    const { current: id } = channels;
     return { id, ...channels.entities[id] };
   });
 
