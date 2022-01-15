@@ -1,20 +1,25 @@
+/* eslint-disable react/jsx-props-no-spreading */
+
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Button, Nav, Form,
+  Dropdown, Button, ButtonGroup, Nav, Form,
 } from 'react-bootstrap';
 import PlusIcon from 'bootstrap-icons/icons/plus-square.svg';
 
-import { selectChannel, addChannel } from '../slices/channelsSlice';
+import { selectChannel, addChannel, removeChannel } from '../slices/channelsSlice';
 import {
-  changeNewChannelName, showNewChannelForm,
+  changeNewChannelName, showNewChannelForm, resetNewChannelForm,
 } from '../slices/uiSlice';
+import { useWebsocket } from '../hooks';
 
 const Channels = () => {
   const dispatch = useDispatch();
   const ui = useSelector((state) => state.ui);
   const channels = useSelector((state) => state.channels);
   const currentChannel = channels.current;
+
+  const { socket } = useWebsocket();
 
   const handleAddButtonClick = () => {
     dispatch(showNewChannelForm(true));
@@ -26,7 +31,10 @@ const Channels = () => {
 
   const handleNewChannelSubmit = (e) => {
     e.preventDefault();
-    dispatch(addChannel({ name: ui.newChannelForm.name }));
+    socket.emit('newChannel', { name: ui.newChannelForm.name }, ({ data }) => {
+      dispatch(addChannel(data));
+      dispatch(resetNewChannelForm());
+    });
   };
 
   const renderChannels = () => {
@@ -34,19 +42,58 @@ const Channels = () => {
       const channel = channels.entities[id];
 
       const handleClick = () => dispatch(selectChannel({ channelId: channel.name }));
+      const handleOptionSelect = (eventKey) => {
+        if (eventKey === 'remove') {
+          socket.emit('removeChannel', { id }, () => {
+            console.log('channel removed');
+            dispatch(removeChannel(id));
+          });
+        }
+      };
 
       const isCurrent = currentChannel === channel.name;
 
-      return (
-        <Nav.Item key={id} className="w-100">
+      const btnVariant = isCurrent ? 'secondary' : null;
+
+      const btn = channel.removable ? (
+        <Dropdown as={ButtonGroup} className="w-100" onSelect={handleOptionSelect}>
           <Button
-            variant={isCurrent ? 'secondary' : null}
-            onClick={handleClick}
             className="w-100 rounded-0 text-start"
+            variant={btnVariant}
+            onClick={handleClick}
           >
             <span className="me-1">#</span>
             {channel.name}
           </Button>
+          <Dropdown.Toggle
+            split
+            id="channel-options"
+            variant={btnVariant}
+            className="rounded-0"
+          />
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="remove">
+              Удалить
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="rename">
+              Переименовать
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      ) : (
+        <Button
+          variant={btnVariant}
+          className="w-100 rounded-0 text-start"
+          onClick={handleClick}
+        >
+          <span className="me-1">#</span>
+          {channel.name}
+        </Button>
+      );
+
+      return (
+        <Nav.Item key={id} className="w-100">
+          {btn}
         </Nav.Item>
       );
     });

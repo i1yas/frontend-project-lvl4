@@ -1,8 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-import axios from 'axios';
-import { createSlice, createEntityAdapter, createAsyncThunk } from '@reduxjs/toolkit';
-import routes from '../routes';
+import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { fetchData } from './common';
 
 const normalizeItems = (items) => items.reduce((acc, item) => {
@@ -12,14 +10,6 @@ const normalizeItems = (items) => items.reduce((acc, item) => {
 
   return { ...acc, ids: newIds, entities: newEnities };
 }, { ids: [], entities: {} });
-
-export const addChannel = createAsyncThunk(
-  'channels/addChannel',
-  async (channel) => {
-    const response = await axios.post(routes.channelsPath(), channel);
-    return { channel: response.data };
-  },
-);
 
 const channelsEntityAdapter = createEntityAdapter();
 
@@ -44,6 +34,12 @@ const channelsSlice = createSlice({
       state.current = payload.channelId;
       localStorage.currentChannel = payload.channelId;
     },
+    addChannel: channelsEntityAdapter.addOne,
+    removeChannel: channelsEntityAdapter.removeOne,
+    renameChannel: (state, { payload }) => {
+      const { id, name } = payload;
+      state.entities[id].name = name;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -62,23 +58,14 @@ const channelsSlice = createSlice({
       });
 
     builder
-      .addCase(addChannel.pending, (state) => {
-        state.adding = 'loading';
-        state.addingError = null;
-      })
-      .addCase(addChannel.fulfilled, (state, action) => {
-        const { channel } = action.payload;
-        state.channels = [channel, ...state.channels];
-        state.adding = 'idle';
-        state.addingError = null;
-      })
-      .addCase(addChannel.rejected, (state, action) => {
-        state.adding = 'error';
-        state.addingError = action.error;
+      .addCase(channelsEntityAdapter.removeOne, () => {
+        // should reset current channel here
       });
   },
 });
 
-export const { selectChannel } = channelsSlice.actions;
+export const {
+  addChannel, removeChannel, renameChannel, selectChannel,
+} = channelsSlice.actions;
 
 export default channelsSlice.reducer;

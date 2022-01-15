@@ -4,13 +4,30 @@ import {
   BrowserRouter as Router, Routes, Route, Navigate,
   useLocation,
 } from 'react-router-dom';
+import io from 'socket.io-client';
 
 import LoginPage from './LoginPage';
 import MainPage from './MainPage';
 import NotFoundPage from './NotFoundPage';
-import authContext from '../contexts';
+import authContext, { websocketContext } from '../contexts';
 import useAuth from '../hooks';
 import store from '../slices';
+
+const WebsocketProvider = ({ children }) => {
+  const [socket, setSocket] = React.useState(null);
+
+  React.useEffect(() => {
+    setSocket(io('/'));
+  }, []);
+
+  return (
+    <websocketContext.Provider
+      value={{ socket }}
+    >
+      {children}
+    </websocketContext.Provider>
+  );
+};
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -57,9 +74,11 @@ const LoginRoute = ({ children }) => {
 
 const wrapWithProviders = (element) => (
   <AuthProvider>
-    <ReduxProvider store={store}>
-      {element}
-    </ReduxProvider>
+    <WebsocketProvider>
+      <ReduxProvider store={store}>
+        {element}
+      </ReduxProvider>
+    </WebsocketProvider>
   </AuthProvider>
 );
 
