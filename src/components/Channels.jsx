@@ -37,29 +37,31 @@ const Channels = () => {
     });
   };
 
+  const handleClick = (id) => () => dispatch(selectChannel({ channelId: id }));
+
+  const handleOptionSelect = (id) => (eventKey) => {
+    if (eventKey === 'remove') {
+      socket.emit('removeChannel', { id }, () => {
+        dispatch(removeChannel(id));
+        if (currentChannelId === id) dispatch(selectChannel({ channelId: 1 }));
+      });
+    }
+  };
+
   const renderChannels = () => {
     const items = channels.ids.map((id) => {
       const channel = channels.entities[id];
-
-      const handleClick = () => dispatch(selectChannel({ channelId: id }));
-      const handleOptionSelect = (eventKey) => {
-        if (eventKey === 'remove') {
-          socket.emit('removeChannel', { id }, () => {
-            dispatch(removeChannel(id));
-          });
-        }
-      };
 
       const isCurrent = currentChannelId === id;
 
       const btnVariant = isCurrent ? 'secondary' : null;
 
       const btn = channel.removable ? (
-        <Dropdown as={ButtonGroup} className="w-100" onSelect={handleOptionSelect}>
+        <Dropdown as={ButtonGroup} className="w-100" onSelect={handleOptionSelect(id)}>
           <Button
             className="w-100 rounded-0 text-start"
             variant={btnVariant}
-            onClick={handleClick}
+            onClick={handleClick(id)}
           >
             <span className="me-1">#</span>
             {channel.name}
@@ -83,7 +85,7 @@ const Channels = () => {
         <Button
           variant={btnVariant}
           className="w-100 rounded-0 text-start"
-          onClick={handleClick}
+          onClick={handleClick(id)}
         >
           <span className="me-1">#</span>
           {channel.name}
