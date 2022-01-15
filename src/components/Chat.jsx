@@ -37,7 +37,11 @@ const Input = () => (
 );
 
 const Chat = () => {
-  const currentChannel = useSelector((state) => state.channels.current);
+  const currentChannel = useSelector((state) => {
+    const { channels } = state;
+    const { id } = channels;
+    return { id, ...channels.entities[id] };
+  });
 
   return (
     <div className="d-flex h-100 flex-column">
@@ -45,7 +49,7 @@ const Chat = () => {
         <div>
           <strong>
             <span className="me-1">#</span>
-            {currentChannel}
+            {currentChannel.name}
           </strong>
         </div>
         <div>2 messages</div>

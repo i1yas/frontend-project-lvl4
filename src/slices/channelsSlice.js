@@ -6,16 +6,16 @@ import { fetchData } from './common';
 const normalizeItems = (items) => items.reduce((acc, item) => {
   const { id, ...rest } = item;
   const newIds = acc.ids.concat(id);
-  const newEnities = { ...acc.entities, [id]: rest };
+  const newEntities = { ...acc.entities, [id]: rest };
 
-  return { ...acc, ids: newIds, entities: newEnities };
+  return { ...acc, ids: newIds, entities: newEntities };
 }, { ids: [], entities: {} });
 
 const channelsEntityAdapter = createEntityAdapter();
 
 const getInitialChannel = () => {
-  const storageValue = localStorage.currentChannel || 'general';
-  return storageValue;
+  const storageValue = localStorage.currentChannel || 1;
+  return Number(storageValue);
 };
 
 const initialState = channelsEntityAdapter.getInitialState({
@@ -55,11 +55,6 @@ const channelsSlice = createSlice({
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = 'error';
         state.loadingError = action.error;
-      });
-
-    builder
-      .addCase(channelsEntityAdapter.removeOne, () => {
-        // should reset current channel here
       });
   },
 });

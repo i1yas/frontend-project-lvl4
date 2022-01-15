@@ -17,7 +17,7 @@ const Channels = () => {
   const dispatch = useDispatch();
   const ui = useSelector((state) => state.ui);
   const channels = useSelector((state) => state.channels);
-  const currentChannel = channels.current;
+  const currentChannelId = channels.current;
 
   const { socket } = useWebsocket();
 
@@ -41,17 +41,16 @@ const Channels = () => {
     const items = channels.ids.map((id) => {
       const channel = channels.entities[id];
 
-      const handleClick = () => dispatch(selectChannel({ channelId: channel.name }));
+      const handleClick = () => dispatch(selectChannel({ channelId: id }));
       const handleOptionSelect = (eventKey) => {
         if (eventKey === 'remove') {
           socket.emit('removeChannel', { id }, () => {
-            console.log('channel removed');
             dispatch(removeChannel(id));
           });
         }
       };
 
-      const isCurrent = currentChannel === channel.name;
+      const isCurrent = currentChannelId === id;
 
       const btnVariant = isCurrent ? 'secondary' : null;
 
