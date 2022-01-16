@@ -31,6 +31,7 @@ const WebsocketProvider = ({ children }) => {
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = React.useState(false);
+  const { username } = JSON.parse(localStorage.getItem('userId'));
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
@@ -39,7 +40,10 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <authContext.Provider value={{ loggedIn, logIn, logOut }}>
+    <authContext.Provider value={{
+      loggedIn, logIn, logOut, username,
+    }}
+    >
       {children}
     </authContext.Provider>
   );
