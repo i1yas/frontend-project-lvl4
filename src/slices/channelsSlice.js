@@ -30,9 +30,8 @@ const channelsSlice = createSlice({
   name: 'channels',
   initialState,
   reducers: {
-    selectChannel: (state, { payload }) => {
+    setCurrentChannel: (state, { payload }) => {
       state.current = payload.channelId;
-      localStorage.currentChannel = payload.channelId; // TODO: move side effect from reducer
     },
     addChannel: channelsEntityAdapter.addOne,
     removeChannel: channelsEntityAdapter.removeOne,
@@ -60,7 +59,12 @@ const channelsSlice = createSlice({
 });
 
 export const {
-  addChannel, removeChannel, renameChannel, selectChannel,
+  addChannel, removeChannel, renameChannel, setCurrentChannel,
 } = channelsSlice.actions;
+
+export const selectChannel = (payload) => (dispatch) => {
+  dispatch(setCurrentChannel(payload));
+  localStorage.currentChannel = payload.channelId;
+};
 
 export default channelsSlice.reducer;
