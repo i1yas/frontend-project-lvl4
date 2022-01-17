@@ -27,7 +27,8 @@ const NewChannelModal = () => {
     socket.emit('newChannel', { name }, ({ data }) => {
       dispatch(addChannel(data));
       setName('');
-      hideModal();
+      dispatch(hideModal());
+      dispatch(selectChannel({ channelId: data.id }));
     });
   };
 
