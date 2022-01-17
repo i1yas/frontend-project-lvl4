@@ -20,7 +20,12 @@ const NewChannelModal = () => {
   const { socket } = useWebsocket();
   const [name, setName] = React.useState('');
   const modal = useSelector((state) => state.ui.modal);
+  const ref = React.useRef(null);
   const show = modal.name === 'newChannel';
+
+  React.useEffect(() => {
+    if (show) ref.current.focus();
+  }, [show]);
 
   const handleNewChannelSubmit = (e) => {
     e.preventDefault();
@@ -53,6 +58,7 @@ const NewChannelModal = () => {
             size="sm"
             value={name}
             onChange={handleNewChannelNameChange}
+            ref={ref}
           />
           <Button variant="secondary" onClick={handleClose}>Отмена</Button>
           <Button type="submit" variant="primary">Добавить</Button>
@@ -66,12 +72,14 @@ const RenameChannelModal = () => {
   const dispatch = useDispatch();
   const { socket } = useWebsocket();
   const modal = useSelector((state) => state.ui.modal);
+  const ref = React.useRef(null);
   const show = modal.name === 'renameChannel';
   const { channel } = modal;
   const [name, setName] = React.useState('');
 
   React.useEffect(() => {
     if (channel) setName(channel.name);
+    if (show) ref.current.focus();
   }, [show]);
 
   const handleRenameChannelSubmit = (e) => {
@@ -105,6 +113,7 @@ const RenameChannelModal = () => {
             size="sm"
             value={name}
             onChange={handleNewChannelNameChange}
+            ref={ref}
           />
           <Button variant="secondary" onClick={handleClose}>Отмена</Button>
           <Button type="submit" variant="primary">Сохранить</Button>
