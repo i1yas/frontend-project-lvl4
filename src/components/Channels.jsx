@@ -95,11 +95,13 @@ const RenameChannelModal = () => {
   const handleRenameChannelSubmit = (e) => {
     e.preventDefault();
     const payload = { id: channel.id, name };
-    socket.emit('renameChannel', payload, () => {
-      dispatch(renameChannel(payload));
-      setName('');
-      dispatch(hideModal());
-    });
+    dispatch(renameChannel((done) => {
+      socket.emit('renameChannel', payload, () => {
+        done(payload);
+        setName('');
+        dispatch(hideModal());
+      });
+    }));
   };
 
   const handleNewChannelNameChange = (e) => {
@@ -148,10 +150,12 @@ const Channels = () => {
   const handleOptionSelect = (channel) => (eventKey) => {
     if (eventKey === 'remove') {
       const { id } = channel;
-      socket.emit('removeChannel', { id }, () => {
-        dispatch(removeChannel(id));
-        if (currentChannelId === id) dispatch(selectChannel({ channelId: 1 }));
-      });
+      dispatch(removeChannel((done) => {
+        socket.emit('removeChannel', { id }, () => {
+          done(id);
+          if (currentChannelId === id) dispatch(selectChannel({ channelId: 1 }));
+        });
+      }));
     }
     if (eventKey === 'rename') {
       dispatch(showRenameChannelModal({ channel }));

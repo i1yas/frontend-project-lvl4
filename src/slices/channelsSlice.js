@@ -14,6 +14,8 @@ const createAsyncThunkWithCallback = (name) => createAsyncThunk(
 );
 
 export const addChannel = createAsyncThunkWithCallback('channels/addChannel');
+export const removeChannel = createAsyncThunkWithCallback('channels/removeChannel');
+export const renameChannel = createAsyncThunkWithCallback('channels/renameChannel');
 
 const normalizeItems = (items) => items.reduce((acc, item) => {
   const { id, ...rest } = item;
@@ -33,6 +35,8 @@ const getInitialChannel = () => {
 const initialState = channelsEntityAdapter.getInitialState({
   loading: 'idle',
   adding: 'idle',
+  removing: 'idle',
+  renaming: 'idle',
   loadingError: null,
   addingError: null,
   current: getInitialChannel(),
@@ -45,11 +49,11 @@ const channelsSlice = createSlice({
     setCurrentChannel: (state, { payload }) => {
       state.current = payload.channelId;
     },
-    removeChannel: channelsEntityAdapter.removeOne,
-    renameChannel: (state, { payload }) => {
-      const { id, name } = payload;
-      state.entities[id].name = name;
-    },
+    // removeChannel: channelsEntityAdapter.removeOne,
+    // renameChannel: (state, { payload }) => {
+    //   const { id, name } = payload;
+    //   state.entities[id].name = name;
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -72,12 +76,25 @@ const channelsSlice = createSlice({
         state.adding = 'loading';
       })
       .addCase(addChannel.fulfilled, channelsEntityAdapter.addOne);
+
+    builder
+      .addCase(removeChannel.pending, (state) => {
+        state.removing = 'loading';
+      })
+      .addCase(removeChannel.fulfilled, channelsEntityAdapter.removeOne);
+
+    builder
+      .addCase(renameChannel.pending, (state) => {
+        state.renaming = 'loading';
+      })
+      .addCase(renameChannel.fulfilled, (state, { payload }) => {
+        const { id, name } = payload;
+        state.entities[id].name = name;
+      });
   },
 });
 
-export const {
-  removeChannel, renameChannel, setCurrentChannel,
-} = channelsSlice.actions;
+export const { setCurrentChannel } = channelsSlice.actions;
 
 export const selectChannel = (payload) => (dispatch) => {
   dispatch(setCurrentChannel(payload));
