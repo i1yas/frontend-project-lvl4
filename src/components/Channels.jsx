@@ -20,6 +20,7 @@ const NewChannelModal = () => {
   const { socket } = useWebsocket();
   const [name, setName] = React.useState('');
   const modal = useSelector((state) => state.ui.modal);
+  const adding = useSelector((state) => state.channels.adding);
   const ref = React.useRef(null);
   const show = modal.name === 'newChannel';
 
@@ -29,12 +30,15 @@ const NewChannelModal = () => {
 
   const handleNewChannelSubmit = (e) => {
     e.preventDefault();
-    socket.emit('newChannel', { name }, ({ data }) => {
-      dispatch(addChannel(data));
-      setName('');
-      dispatch(hideModal());
-      dispatch(selectChannel({ channelId: data.id }));
-    });
+
+    dispatch(addChannel((done) => {
+      socket.emit('newChannel', { name }, ({ data }) => {
+        done(data);
+        setName('');
+        dispatch(hideModal());
+        dispatch(selectChannel({ channelId: data.id })); // TODO: move to slice
+      });
+    }));
   };
 
   const handleNewChannelNameChange = (e) => {
@@ -61,7 +65,13 @@ const NewChannelModal = () => {
             ref={ref}
           />
           <Button variant="secondary" onClick={handleClose}>Отмена</Button>
-          <Button type="submit" variant="primary">Добавить</Button>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={adding === 'loading'}
+          >
+            Добавить
+          </Button>
         </Modal.Footer>
       </Form>
     </Modal>

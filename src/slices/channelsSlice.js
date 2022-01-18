@@ -1,7 +1,19 @@
 /* eslint-disable no-param-reassign */
 
-import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import { createSlice, createEntityAdapter, createAsyncThunk } from '@reduxjs/toolkit';
+
 import { fetchData } from './common';
+
+const createAsyncThunkWithCallback = (name) => createAsyncThunk(
+  name,
+  async (fn) => new Promise((resolve) => {
+    fn((data) => {
+      resolve(data);
+    });
+  }),
+);
+
+export const addChannel = createAsyncThunkWithCallback('channels/addChannel');
 
 const normalizeItems = (items) => items.reduce((acc, item) => {
   const { id, ...rest } = item;
@@ -33,7 +45,6 @@ const channelsSlice = createSlice({
     setCurrentChannel: (state, { payload }) => {
       state.current = payload.channelId;
     },
-    addChannel: channelsEntityAdapter.addOne,
     removeChannel: channelsEntityAdapter.removeOne,
     renameChannel: (state, { payload }) => {
       const { id, name } = payload;
@@ -55,11 +66,17 @@ const channelsSlice = createSlice({
         state.loading = 'error';
         state.loadingError = action.error;
       });
+
+    builder
+      .addCase(addChannel.pending, (state) => {
+        state.adding = 'loading';
+      })
+      .addCase(addChannel.fulfilled, channelsEntityAdapter.addOne);
   },
 });
 
 export const {
-  addChannel, removeChannel, renameChannel, setCurrentChannel,
+  removeChannel, renameChannel, setCurrentChannel,
 } = channelsSlice.actions;
 
 export const selectChannel = (payload) => (dispatch) => {
