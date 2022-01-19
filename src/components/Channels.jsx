@@ -21,6 +21,10 @@ const NewChannelModal = () => {
   const [name, setName] = React.useState('');
   const modal = useSelector((state) => state.ui.modal);
   const adding = useSelector((state) => state.channels.adding);
+  const error = useSelector((state) => state.channels.addingError);
+  const channelNames = useSelector((state) => (
+    state.channels.ids.map((id) => state.channels.entities[id].name)
+  ));
   const ref = React.useRef(null);
   const show = modal.name === 'newChannel';
 
@@ -32,6 +36,7 @@ const NewChannelModal = () => {
     e.preventDefault();
 
     dispatch(addChannel((done) => {
+      if (channelNames.includes(name)) throw new Error('channel_exists');
       socket.emit('newChannel', { name }, ({ data }) => {
         done(data);
         setName('');
@@ -64,6 +69,9 @@ const NewChannelModal = () => {
             onChange={handleNewChannelNameChange}
             ref={ref}
           />
+          {adding === 'error' && (
+            <Form.Text className="w-100 text-danger">{error.message}</Form.Text>
+          )}
           <Button variant="secondary" onClick={handleClose}>Отмена</Button>
           <Button
             type="submit"

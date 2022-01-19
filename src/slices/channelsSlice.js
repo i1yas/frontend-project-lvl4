@@ -49,11 +49,6 @@ const channelsSlice = createSlice({
     setCurrentChannel: (state, { payload }) => {
       state.current = payload.channelId;
     },
-    // removeChannel: channelsEntityAdapter.removeOne,
-    // renameChannel: (state, { payload }) => {
-    //   const { id, name } = payload;
-    //   state.entities[id].name = name;
-    // },
   },
   extraReducers: (builder) => {
     builder
@@ -75,7 +70,14 @@ const channelsSlice = createSlice({
       .addCase(addChannel.pending, (state) => {
         state.adding = 'loading';
       })
-      .addCase(addChannel.fulfilled, channelsEntityAdapter.addOne);
+      .addCase(addChannel.fulfilled, (state, action) => {
+        channelsEntityAdapter.addOne(state, action);
+        state.adding = 'idle';
+      })
+      .addCase(addChannel.rejected, (state, action) => {
+        state.adding = 'error';
+        state.addingError = action.error;
+      });
 
     builder
       .addCase(removeChannel.pending, (state) => {
