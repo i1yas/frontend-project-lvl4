@@ -28,6 +28,11 @@ const Input = () => {
   const { username } = useAuth();
   const currentChannelId = useSelector((state) => state.channels.current);
   const dispatch = useDispatch();
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    ref.current.focus();
+  }, [currentChannelId]);
 
   React.useEffect(() => {
     socket.on('newMessage', (payload) => {
@@ -50,7 +55,11 @@ const Input = () => {
   return (
     <Form className="mt-auto" onSubmit={handleSubmit}>
       <InputGroup>
-        <FormControl value={text} onChange={handleChange} />
+        <FormControl
+          ref={ref}
+          value={text}
+          onChange={handleChange}
+        />
         <Button type="submit" variant="outline-primary">
           <ArrowRightIcon width={24} height={24} />
         </Button>
