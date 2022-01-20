@@ -4,6 +4,7 @@ import {
   Form, InputGroup, FormControl, Button,
 } from 'react-bootstrap';
 import ArrowRightIcon from 'bootstrap-icons/icons/arrow-right.svg';
+import { useTranslation } from 'react-i18next';
 
 import useAuth, { useWebsocket } from '../hooks';
 import { addMessage } from '../slices/messagesSlice';
@@ -74,6 +75,7 @@ const Chat = () => {
     const { current: id } = channels;
     return { id, ...channels.entities[id] };
   });
+  const { t } = useTranslation();
 
   const messages = useSelector((state) => state.messages.items.filter(
     (msg) => msg.channelId === currentChannel.id,
@@ -93,7 +95,7 @@ const Chat = () => {
         <div>
           {count}
           {' '}
-          messages
+          {t('chat.message', { count })}
         </div>
       </div>
       <div className="px-4 overflow-auto">

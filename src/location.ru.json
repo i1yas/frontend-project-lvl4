@@ -1,0 +1,34 @@
+{
+    "translation": {
+        "app": {
+            "title": "Slack chat"
+        },
+        "channels": {
+            "title": "Каналы",
+            "remove": "Удалить",
+            "removeChannel": "Удалить канал",
+            "rename": "Переименовать",
+            "renameChannel": "Переименовать канал",
+            "addChannel": "Добавить канал"
+        },
+        "chat": {
+            "message_zero": "сообщений",
+            "message_one": "сообщение",
+            "message_few": "сообщения",
+            "message_many": "сообщений"
+        },
+        "auth": {
+            "logout": "Выйти",
+            "login": "Войти",
+            "register": "Зарегистрироваться",
+            "username": "Имя",
+            "password": "Пароль",
+            "passwordConfirm": "Подтверждение"
+        },
+        "form": {
+            "save": "Сохранить",
+            "add": "Добавить",
+            "cancel": "Отменить"
+        }
+    }
+}

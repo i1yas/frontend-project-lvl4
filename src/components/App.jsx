@@ -5,6 +5,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import io from 'socket.io-client';
+import { I18nextProvider } from 'react-i18next';
 
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -13,6 +14,9 @@ import NotFoundPage from './NotFoundPage';
 import authContext, { websocketContext } from '../contexts';
 import useAuth from '../hooks';
 import store from '../slices';
+import init from '../init';
+
+const { i18n } = init();
 
 const WebsocketProvider = ({ children }) => {
   const [socket, setSocket] = React.useState(null);
@@ -81,7 +85,7 @@ const wrapWithProviders = (element) => (
   <AuthProvider>
     <WebsocketProvider>
       <ReduxProvider store={store}>
-        {element}
+        <I18nextProvider i18n={i18n}>{element}</I18nextProvider>
       </ReduxProvider>
     </WebsocketProvider>
   </AuthProvider>

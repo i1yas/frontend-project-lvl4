@@ -6,6 +6,8 @@ import {
 } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
+
 import routes from '../routes';
 
 const formInitialState = {
@@ -20,6 +22,7 @@ const validationSchema = Yup.object({
 
 const LoginPage = () => {
   const [authError, setAuthError] = React.useState(null);
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,7 +54,7 @@ const LoginPage = () => {
           <Form.Control
             type="text"
             name="username"
-            placeholder="Login"
+            placeholder={t('auth.username')}
             required
             onChange={formik.handleChange}
             value={formik.values.username}
@@ -62,7 +65,7 @@ const LoginPage = () => {
           <Form.Control
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder={t('auth.password')}
             required
             onChange={formik.handleChange}
             value={formik.values.password}
@@ -71,8 +74,8 @@ const LoginPage = () => {
           {authError && <Form.Text>{authError}</Form.Text>}
         </Form.Group>
         <Stack direction="horizontal" gap={3}>
-          <Button type="submit">Login</Button>
-          <div><a href="/signup">Register</a></div>
+          <Button type="submit">{t('auth.login')}</Button>
+          <div><a href="/signup">{t('auth.register')}</a></div>
         </Stack>
       </Stack>
     </Form>

@@ -6,6 +6,7 @@ import {
   Dropdown, Button, ButtonGroup, Nav, Form, Modal,
 } from 'react-bootstrap';
 import PlusIcon from 'bootstrap-icons/icons/plus-square.svg';
+import { useTranslation } from 'react-i18next';
 
 import {
   selectChannel, addChannel, removeChannel, renameChannel,
@@ -27,6 +28,7 @@ const NewChannelModal = () => {
   ));
   const ref = React.useRef(null);
   const show = modal.name === 'newChannel';
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (show) ref.current.focus();
@@ -59,7 +61,7 @@ const NewChannelModal = () => {
     <Modal show={show} onHide={handleClose}>
       <Form onSubmit={handleNewChannelSubmit}>
         <Modal.Header>
-          <Modal.Title>Новый канал</Modal.Title>
+          <Modal.Title>{t('channels.addChannel')}</Modal.Title>
         </Modal.Header>
         <Modal.Footer>
           <Form.Control
@@ -72,13 +74,13 @@ const NewChannelModal = () => {
           {adding === 'error' && (
             <Form.Text className="w-100 text-danger">{error.message}</Form.Text>
           )}
-          <Button variant="secondary" onClick={handleClose}>Отмена</Button>
+          <Button variant="secondary" onClick={handleClose}>{t('form.cancel')}</Button>
           <Button
             type="submit"
             variant="primary"
             disabled={adding === 'loading'}
           >
-            Добавить
+            {t('form.add')}
           </Button>
         </Modal.Footer>
       </Form>
@@ -94,6 +96,7 @@ const RenameChannelModal = () => {
   const show = modal.name === 'renameChannel';
   const { channel } = modal;
   const [name, setName] = React.useState('');
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     if (channel) setName(channel.name);
@@ -125,7 +128,7 @@ const RenameChannelModal = () => {
     <Modal show={show} onHide={handleClose}>
       <Form onSubmit={handleRenameChannelSubmit}>
         <Modal.Header>
-          <Modal.Title>Переименовать канал</Modal.Title>
+          <Modal.Title>{t('channels.renameChannel')}</Modal.Title>
         </Modal.Header>
         <Modal.Footer>
           <Form.Control
@@ -135,8 +138,8 @@ const RenameChannelModal = () => {
             onChange={handleNewChannelNameChange}
             ref={ref}
           />
-          <Button variant="secondary" onClick={handleClose}>Отмена</Button>
-          <Button type="submit" variant="primary">Сохранить</Button>
+          <Button variant="secondary" onClick={handleClose}>{t('form.cancel')}</Button>
+          <Button type="submit" variant="primary">{t('form.save')}</Button>
         </Modal.Footer>
       </Form>
     </Modal>
@@ -148,6 +151,7 @@ const Channels = () => {
   const channels = useSelector((state) => state.channels);
   const currentChannelId = channels.current;
   const { socket } = useWebsocket();
+  const { t } = useTranslation();
 
   const handleAddButtonClick = () => {
     dispatch(showNewChannelModal());
@@ -196,10 +200,10 @@ const Channels = () => {
           />
           <Dropdown.Menu>
             <Dropdown.Item eventKey="remove">
-              Удалить
+              {t('channels.remove')}
             </Dropdown.Item>
             <Dropdown.Item eventKey="rename">
-              Переименовать
+              {t('channels.rename')}
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -233,7 +237,7 @@ const Channels = () => {
             className="d-flex justify-content-between ps-2"
           >
             <span>
-              channels
+              {t('channels.title')}
             </span>
             <Button
               size="sm"

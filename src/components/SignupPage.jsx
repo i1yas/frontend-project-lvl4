@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 import routes from '../routes';
 
@@ -24,6 +25,7 @@ const validationSchema = Yup.object({
 const SignupPage = () => {
   const [authError, setAuthError] = React.useState(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const onSubmit = async (values) => {
     try {
@@ -52,17 +54,17 @@ const SignupPage = () => {
         {
           type: 'text',
           name: 'username',
-          placeholder: 'Username',
+          placeholder: t('auth.username'),
         },
         {
           type: 'password',
           name: 'password',
-          placeholder: 'Password',
+          placeholder: t('auth.password'),
         },
         {
           type: 'password',
           name: 'passwordConfirm',
-          placeholder: 'Password confirm',
+          placeholder: t('auth.passwordConfirm'),
         },
       ].map(({ name, type, placeholder }) => (
         <Form.Group key={name} className="mb-2">
@@ -82,8 +84,8 @@ const SignupPage = () => {
         </div>
       )}
       <Stack direction="horizontal" gap={3}>
-        <Button type="submit">Register</Button>
-        <div><a href="/login">Login</a></div>
+        <Button type="submit">{t('auth.register')}</Button>
+        <div><a href="/login">{t('auth.login')}</a></div>
       </Stack>
     </Form>
   );

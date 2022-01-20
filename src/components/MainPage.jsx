@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
   Container, Row, Col, Navbar, Button, Stack,
 } from 'react-bootstrap';
@@ -11,6 +12,7 @@ import { fetchData } from '../slices/common';
 
 const Header = () => {
   const auth = useAuth();
+  const { t } = useTranslation();
 
   const handleLogOut = () => {
     localStorage.removeItem('userId');
@@ -20,14 +22,14 @@ const Header = () => {
   return (
     <Navbar>
       <Container>
-        <Navbar.Brand>Slack chat</Navbar.Brand>
+        <Navbar.Brand>{t('app.title')}</Navbar.Brand>
         <Stack direction="horizontal" gap={1}>
           <div className="p-2">{auth.username}</div>
           <Button
             size="sm"
             onClick={handleLogOut}
           >
-            Log out
+            {t('auth.logout')}
           </Button>
         </Stack>
       </Container>
