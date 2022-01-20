@@ -19,7 +19,7 @@ const formInitialState = {
 const validationSchema = Yup.object({
   username: Yup.string().min(3).max(20),
   password: Yup.string().min(6),
-  passwordConfirm: Yup.string().oneOf([Yup.ref('password')]),
+  passwordConfirm: Yup.string().oneOf([Yup.ref('password')], 'passwordConfirm'),
 });
 
 const SignupPage = () => {
@@ -37,15 +37,18 @@ const SignupPage = () => {
       if (!axios.isAxiosError(e)) throw e;
       const { status } = e.response;
       if (status === 409) setAuthError('errors.usernameCollision');
-      setAuthError('errors.signupError');
+      setAuthError('errors.signup');
     }
   };
 
   const formik = useFormik({ initialValues: formInitialState, validationSchema, onSubmit });
 
   const renderErrorMessage = (name) => {
+    const error = formik.errors[name];
     const hasError = formik.touched[name] && formik.errors[name];
-    return hasError ? <Form.Text>{formik.errors[name]}</Form.Text> : null;
+    if (!hasError) return null;
+    const message = t(`formErrors.${error.key || error}`, { count: error.values });
+    return <Form.Text>{message}</Form.Text>;
   };
 
   const form = (
@@ -80,7 +83,7 @@ const SignupPage = () => {
       ))}
       {authError && (
         <div className="mb-2">
-          <Form.Text>{authError}</Form.Text>
+          <Form.Text>{t(authError)}</Form.Text>
         </div>
       )}
       <Stack direction="horizontal" gap={3}>

@@ -38,7 +38,7 @@ const NewChannelModal = () => {
     e.preventDefault();
 
     dispatch(addChannel((done) => {
-      if (channelNames.includes(name)) throw new Error('channel_exists');
+      if (channelNames.includes(name)) throw new Error('channelExists');
       socket.emit('newChannel', { name }, ({ data }) => {
         done(data);
         setName('');
@@ -72,7 +72,7 @@ const NewChannelModal = () => {
             ref={ref}
           />
           {adding === 'error' && (
-            <Form.Text className="w-100 text-danger">{error.message}</Form.Text>
+            <Form.Text className="w-100 text-danger">{t(`formErrors.${error.message}`)}</Form.Text>
           )}
           <Button variant="secondary" onClick={handleClose}>{t('form.cancel')}</Button>
           <Button

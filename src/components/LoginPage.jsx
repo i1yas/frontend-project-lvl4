@@ -15,6 +15,12 @@ const formInitialState = {
   password: '',
 };
 
+Yup.setLocale({
+  string: {
+    min: ({ min }) => ({ key: 'fieldTooShort', values: min }),
+  },
+});
+
 const validationSchema = Yup.object({
   username: Yup.string().min(3),
   password: Yup.string().min(3),
@@ -36,15 +42,23 @@ const LoginPage = () => {
       const prevLocation = location.state?.from || { pathname: '/' };
       navigate(prevLocation.pathname);
     } catch (e) {
-      setAuthError('auth error');
+      setAuthError('auth.login');
     }
   };
 
   const formik = useFormik({ initialValues: formInitialState, validationSchema, onSubmit });
 
   const renderErrorMessage = (name) => {
-    const hasError = formik.touched[name] && formik.errors[name];
-    return <Form.Text>{hasError && formik.errors[name]}</Form.Text>;
+    const error = formik.errors[name];
+    const hasError = formik.touched[name] && error;
+    if (!hasError) return null;
+    const message = t(`formErrors.${error.key || error}`, {
+      count: error.values,
+    });
+
+    return (
+      <Form.Text>{message}</Form.Text>
+    );
   };
 
   const form = (
@@ -71,7 +85,7 @@ const LoginPage = () => {
             value={formik.values.password}
           />
           {renderErrorMessage('password')}
-          {authError && <Form.Text>{authError}</Form.Text>}
+          {authError && <Form.Text>{t(authError)}</Form.Text>}
         </Form.Group>
         <Stack direction="horizontal" gap={3}>
           <Button type="submit">{t('auth.login')}</Button>
