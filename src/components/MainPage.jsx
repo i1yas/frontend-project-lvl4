@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import {
-  Container, Row, Col, Navbar, Button,
+  Container, Row, Col, Navbar, Button, Stack,
 } from 'react-bootstrap';
 
 import Channels from './Channels';
@@ -21,12 +21,15 @@ const Header = () => {
     <Navbar>
       <Container>
         <Navbar.Brand>Slack chat</Navbar.Brand>
-        <Button
-          size="sm"
-          onClick={handleLogOut}
-        >
-          Log out
-        </Button>
+        <Stack direction="horizontal" gap={1}>
+          <div className="p-2">{auth.username}</div>
+          <Button
+            size="sm"
+            onClick={handleLogOut}
+          >
+            Log out
+          </Button>
+        </Stack>
       </Container>
     </Navbar>
   );
