@@ -7,6 +7,7 @@ import {
 import io from 'socket.io-client';
 
 import LoginPage from './LoginPage';
+import SignupPage from './SignupPage';
 import MainPage from './MainPage';
 import NotFoundPage from './NotFoundPage';
 import authContext, { websocketContext } from '../contexts';
@@ -31,7 +32,7 @@ const WebsocketProvider = ({ children }) => {
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const { username } = JSON.parse(localStorage.getItem('userId'));
+  const { username } = JSON.parse(localStorage.getItem('userId')) || {};
 
   const logIn = () => setLoggedIn(true);
   const logOut = () => {
@@ -104,6 +105,15 @@ const App = () => wrapWithProviders(
         element={(
           <LoginRoute>
             <LoginPage />
+          </LoginRoute>
+        )}
+      />
+      <Route
+        path="/signup"
+        exact
+        element={(
+          <LoginRoute>
+            <SignupPage />
           </LoginRoute>
         )}
       />

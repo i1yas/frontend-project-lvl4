@@ -1,7 +1,9 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import {
+  Form, Button, Container, Row, Col, Stack,
+} from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
 import routes from '../routes';
@@ -42,33 +44,46 @@ const LoginPage = () => {
     return <Form.Text>{hasError && formik.errors[name]}</Form.Text>;
   };
 
-  return (
+  const form = (
     <Form onSubmit={formik.handleSubmit}>
-      <Form.Group>
-        <Form.Control
-          type="text"
-          name="username"
-          placeholder="Login"
-          required
-          onChange={formik.handleChange}
-          value={formik.values.username}
-        />
-        {renderErrorMessage('username')}
-      </Form.Group>
-      <Form.Group>
-        <Form.Control
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-          onChange={formik.handleChange}
-          value={formik.values.password}
-        />
-        {renderErrorMessage('password')}
-        {authError && <Form.Text>{authError}</Form.Text>}
-      </Form.Group>
-      <Button type="submit">Submit</Button>
+      <Stack gap={2}>
+        <Form.Group>
+          <Form.Control
+            type="text"
+            name="username"
+            placeholder="Login"
+            required
+            onChange={formik.handleChange}
+            value={formik.values.username}
+          />
+          {renderErrorMessage('username')}
+        </Form.Group>
+        <Form.Group>
+          <Form.Control
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+            onChange={formik.handleChange}
+            value={formik.values.password}
+          />
+          {renderErrorMessage('password')}
+          {authError && <Form.Text>{authError}</Form.Text>}
+        </Form.Group>
+        <Stack direction="horizontal" gap={3}>
+          <Button type="submit">Login</Button>
+          <div><a href="/signup">Register</a></div>
+        </Stack>
+      </Stack>
     </Form>
+  );
+
+  return (
+    <Container className="my-4">
+      <Row>
+        <Col md="auto">{form}</Col>
+      </Row>
+    </Container>
   );
 };
 
