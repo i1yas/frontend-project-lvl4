@@ -36,7 +36,8 @@
         "errors": {
             "login": "Ошибка входа",
             "signup": "Ошибка регистрации",
-            "usernameCollision": "Пользователь с таким именем существует"
+            "usernameCollision": "Пользователь с таким именем существует",
+            "fetchData": "Ошибка загрузки данных"
         },
         "formErrors": {
             "fieldTooShort": "Минимальная длинна {{count}}",

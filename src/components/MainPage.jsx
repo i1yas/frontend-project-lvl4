@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Container, Row, Col, Navbar, Button, Stack,
 } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import Channels from './Channels';
 import Chat from './Chat';
@@ -39,9 +40,13 @@ const Header = () => {
 
 const MainPage = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   React.useEffect(() => {
-    dispatch(fetchData());
+    dispatch(fetchData())
+      .catch(() => {
+        toast(t('errors.fetchData'));
+      });
   }, []);
 
   return (
