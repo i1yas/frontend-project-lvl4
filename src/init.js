@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import filter from 'leo-profanity';
 
 import ru from './locale.ru.json';
 
@@ -13,6 +14,8 @@ const init = () => {
       resources: { ru },
       lng: 'ru',
     });
+
+  filter.loadDictionary('ru');
 
   return { i18n };
 };

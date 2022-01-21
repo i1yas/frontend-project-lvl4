@@ -1,10 +1,12 @@
 import React from 'react';
+import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Form, InputGroup, FormControl, Button,
 } from 'react-bootstrap';
 import ArrowRightIcon from 'bootstrap-icons/icons/arrow-right.svg';
 import { useTranslation } from 'react-i18next';
+import filter from 'leo-profanity';
 
 import useAuth, { useWebsocket } from '../hooks';
 import { addMessage } from '../slices/messagesSlice';
@@ -25,6 +27,7 @@ const Messages = ({ messages }) => (
 
 const Input = () => {
   const [text, setText] = React.useState('');
+  const hasBadWords = filter.check(text);
   const { socket } = useWebsocket();
   const { username } = useAuth();
   const currentChannelId = useSelector((state) => state.channels.current);
@@ -43,6 +46,7 @@ const Input = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (hasBadWords) return;
     const message = { author: username, text, channelId: currentChannelId };
     socket.emit('newMessage', message, () => {
       setText('');
@@ -60,8 +64,12 @@ const Input = () => {
           ref={ref}
           value={text}
           onChange={handleChange}
+          className={cn({
+            'is-invalid': hasBadWords,
+          })}
         />
-        <Button type="submit" variant="outline-primary">
+        {/* <Form.Control.Feedback type="invalid">test</Form.Control.Feedback> */}
+        <Button type="submit" variant="outline-primary" disabled={hasBadWords}>
           <ArrowRightIcon width={24} height={24} />
         </Button>
       </InputGroup>
