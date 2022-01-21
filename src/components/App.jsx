@@ -7,6 +7,7 @@ import {
 import io from 'socket.io-client';
 import { I18nextProvider } from 'react-i18next';
 import { ToastContainer } from 'react-toastify';
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -17,7 +18,19 @@ import useAuth from '../hooks';
 import store from '../slices';
 import init from '../init';
 
+const packageInfo = require('../../package.json');
+
 const { i18n } = init();
+
+const rollbarConfig = {
+  accessToken: 'a424f7d0810545acaff4f5655c0bcdd3',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+  payload: {
+    environment: process.env.NODE_ENV,
+    version: packageInfo.version,
+  },
+};
 
 const WebsocketProvider = ({ children }) => {
   const [socket, setSocket] = React.useState(null);
@@ -83,16 +96,20 @@ const LoginRoute = ({ children }) => {
 };
 
 const wrapWithProviders = (element) => (
-  <AuthProvider>
-    <WebsocketProvider>
-      <ReduxProvider store={store}>
-        <I18nextProvider i18n={i18n}>
-          {element}
-          <ToastContainer />
-        </I18nextProvider>
-      </ReduxProvider>
-    </WebsocketProvider>
-  </AuthProvider>
+  <RollbarProvider config={rollbarConfig}>
+    <ErrorBoundary>
+      <AuthProvider>
+        <WebsocketProvider>
+          <ReduxProvider store={store}>
+            <I18nextProvider i18n={i18n}>
+              {element}
+              <ToastContainer />
+            </I18nextProvider>
+          </ReduxProvider>
+        </WebsocketProvider>
+      </AuthProvider>
+    </ErrorBoundary>
+  </RollbarProvider>
 );
 
 const App = () => wrapWithProviders(
