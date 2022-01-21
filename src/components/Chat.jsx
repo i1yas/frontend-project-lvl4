@@ -26,8 +26,8 @@ const Messages = ({ messages }) => (
 );
 
 const Input = () => {
-  const [text, setText] = React.useState('');
-  const hasBadWords = filter.check(text);
+  const [rawText, setText] = React.useState('');
+  const text = filter.clean(rawText, '*');
   const { socket } = useWebsocket();
   const { username } = useAuth();
   const currentChannelId = useSelector((state) => state.channels.current);
@@ -46,7 +46,6 @@ const Input = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (hasBadWords) return;
     const message = { author: username, text, channelId: currentChannelId };
     socket.emit('newMessage', message, () => {
       setText('');
@@ -62,14 +61,10 @@ const Input = () => {
       <InputGroup>
         <FormControl
           ref={ref}
-          value={text}
+          value={rawText}
           onChange={handleChange}
-          className={cn({
-            'is-invalid': hasBadWords,
-          })}
         />
-        {/* <Form.Control.Feedback type="invalid">test</Form.Control.Feedback> */}
-        <Button type="submit" variant="outline-primary" disabled={hasBadWords}>
+        <Button type="submit" variant="outline-primary">
           <ArrowRightIcon width={24} height={24} />
         </Button>
       </InputGroup>
