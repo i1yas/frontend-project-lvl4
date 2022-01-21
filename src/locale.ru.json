@@ -9,7 +9,10 @@
             "removeChannel": "Удалить канал",
             "rename": "Переименовать",
             "renameChannel": "Переименовать канал",
-            "addChannel": "Добавить канал"
+            "addChannel": "Добавить канал",
+            "added": "Канал добавлен",
+            "renamed": "Канал переименован",
+            "removed": "Канал удален"
         },
         "chat": {
             "message_zero": "сообщений",

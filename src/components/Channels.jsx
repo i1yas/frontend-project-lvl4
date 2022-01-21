@@ -7,6 +7,7 @@ import {
 } from 'react-bootstrap';
 import PlusIcon from 'bootstrap-icons/icons/plus-square.svg';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import {
   selectChannel, addChannel, removeChannel, renameChannel,
@@ -44,6 +45,7 @@ const NewChannelModal = () => {
         setName('');
         dispatch(hideModal());
         dispatch(selectChannel({ channelId: data.id })); // TODO: move to slice
+        toast.success(t('channels.added'));
       });
     }));
   };
@@ -111,6 +113,7 @@ const RenameChannelModal = () => {
         done(payload);
         setName('');
         dispatch(hideModal());
+        toast.success(t('channels.renamed'));
       });
     }));
   };
@@ -166,6 +169,7 @@ const Channels = () => {
         socket.emit('removeChannel', { id }, () => {
           done(id);
           if (currentChannelId === id) dispatch(selectChannel({ channelId: 1 }));
+          toast.success(t('channels.removed'));
         });
       }));
     }

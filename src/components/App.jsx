@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import io from 'socket.io-client';
 import { I18nextProvider } from 'react-i18next';
+import { ToastContainer } from 'react-toastify';
 
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -85,7 +86,10 @@ const wrapWithProviders = (element) => (
   <AuthProvider>
     <WebsocketProvider>
       <ReduxProvider store={store}>
-        <I18nextProvider i18n={i18n}>{element}</I18nextProvider>
+        <I18nextProvider i18n={i18n}>
+          {element}
+          <ToastContainer />
+        </I18nextProvider>
       </ReduxProvider>
     </WebsocketProvider>
   </AuthProvider>
