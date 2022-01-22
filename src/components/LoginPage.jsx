@@ -89,7 +89,7 @@ const LoginPage = () => {
         </Form.Group>
         <Stack direction="horizontal" gap={3}>
           <Button type="submit">{t('auth.login')}</Button>
-          <div><a href="/signup">{t('auth.register')}</a></div>
+          <div><a href="/signup">{t('auth.registerPage')}</a></div>
         </Stack>
       </Stack>
     </Form>
