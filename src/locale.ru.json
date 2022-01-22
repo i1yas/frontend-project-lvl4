@@ -1,7 +1,7 @@
 {
     "translation": {
         "app": {
-            "title": "Slack chat"
+            "title": "Hexlet chat"
         },
         "channels": {
             "title": "Каналы",
@@ -18,15 +18,17 @@
             "message_zero": "сообщений",
             "message_one": "сообщение",
             "message_few": "сообщения",
-            "message_many": "сообщений"
+            "message_many": "сообщений",
+            "send": "Отправить"
         },
         "auth": {
             "logout": "Выйти",
             "login": "Войти",
             "register": "Зарегистрироваться",
-            "username": "Имя",
+            "registerPage": "Регистрация",
+            "username": "Ваш ник",
             "password": "Пароль",
-            "passwordConfirm": "Подтверждение"
+            "passwordConfirm": "Подтвердите пароль"
         },
         "form": {
             "save": "Сохранить",
@@ -35,6 +37,7 @@
         },
         "errors": {
             "login": "Ошибка входа",
+            "wrongLoginPass": "Неверные имя пользователя или пароль",
             "signup": "Ошибка регистрации",
             "usernameCollision": "Пользователь с таким именем существует",
             "fetchData": "Ошибка загрузки данных"
@@ -42,7 +45,7 @@
         "formErrors": {
             "fieldTooShort": "Минимальная длинна {{count}}",
             "fieldTooLong": "Максимальная длинна {{count}}",
-            "passwordConfirm": "Должно совпадать с паролем",
+            "passwordConfirm": "Пароли должны совпадать",
             "channelExists": "Канал с таким имененем существует"
         }
     }

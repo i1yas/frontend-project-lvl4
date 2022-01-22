@@ -1,5 +1,4 @@
 import React from 'react';
-import cn from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Form, InputGroup, FormControl, Button,
@@ -33,6 +32,7 @@ const Input = () => {
   const currentChannelId = useSelector((state) => state.channels.current);
   const dispatch = useDispatch();
   const ref = React.useRef(null);
+  const { t } = useTranslation();
 
   React.useEffect(() => {
     ref.current.focus();
@@ -64,7 +64,7 @@ const Input = () => {
           value={rawText}
           onChange={handleChange}
         />
-        <Button type="submit" variant="outline-primary">
+        <Button type="submit" variant="outline-primary" aria-label={t('chat.send')}>
           <ArrowRightIcon width={24} height={24} />
         </Button>
       </InputGroup>
