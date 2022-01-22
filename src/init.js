@@ -10,7 +10,6 @@ const init = () => {
   i18n
     .use(initReactI18next)
     .init({
-      debug: true,
       resources: { ru },
       lng: 'ru',
     });
