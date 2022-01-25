@@ -43,8 +43,8 @@
             "fetchData": "Ошибка загрузки данных"
         },
         "formErrors": {
-            "fieldTooShort": "Минимальная длинна {{count}}",
-            "fieldTooLong": "Максимальная длинна {{count}}",
+            "usernameLength": "От 3 до 20 символов",
+            "passwordLength": "Не менее 6 символов",
             "passwordConfirm": "Пароли должны совпадать",
             "channelExists": "Канал с таким имененем существует"
         }

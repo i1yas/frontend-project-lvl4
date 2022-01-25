@@ -15,15 +15,9 @@ const formInitialState = {
   password: '',
 };
 
-Yup.setLocale({
-  string: {
-    min: ({ min }) => ({ key: 'fieldTooShort', values: min }),
-  },
-});
-
 const validationSchema = Yup.object({
-  username: Yup.string().min(3),
-  password: Yup.string().min(3),
+  username: Yup.string(),
+  password: Yup.string(),
 });
 
 const LoginPage = () => {
@@ -42,7 +36,7 @@ const LoginPage = () => {
       const prevLocation = location.state?.from || { pathname: '/' };
       navigate(prevLocation.pathname);
     } catch (e) {
-      setAuthError('auth.login');
+      setAuthError('errors.wrongLoginPass');
     }
   };
 

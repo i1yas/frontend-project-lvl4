@@ -17,8 +17,8 @@ const formInitialState = {
 };
 
 const validationSchema = Yup.object({
-  username: Yup.string().min(3).max(20),
-  password: Yup.string().min(6),
+  username: Yup.string().min(3, 'usernameLength').max(20, 'usernameLength'),
+  password: Yup.string().min(6, 'passwordLength'),
   passwordConfirm: Yup.string().oneOf([Yup.ref('password')], 'passwordConfirm'),
 });
 
@@ -47,7 +47,7 @@ const SignupPage = () => {
     const error = formik.errors[name];
     const hasError = formik.touched[name] && formik.errors[name];
     if (!hasError) return null;
-    const message = t(`formErrors.${error.key || error}`, { count: error.values });
+    const message = t(`formErrors.${error.key || error}`);
     return <Form.Text>{message}</Form.Text>;
   };
 
