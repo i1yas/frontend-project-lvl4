@@ -33,7 +33,11 @@ const channelsSlice = createSlice({
   initialState,
   reducers: {
     addChannel: channelsEntityAdapter.addOne,
-    removeChannel: channelsEntityAdapter.removeOne,
+    removeChannel: (state, action) => {
+      channelsEntityAdapter.removeOne(state, action);
+      const id = action.payload;
+      if (state.current === id) state.current = 1;
+    },
     renameChannel: (state, { payload }) => {
       const { id, name } = payload;
       state.entities[id].name = name;

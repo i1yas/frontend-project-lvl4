@@ -151,16 +151,12 @@ const RenameChannelModal = () => {
   );
 };
 
-const Channels = () => {
+const ChannelsList = () => {
   const dispatch = useDispatch();
-  const channels = useSelector((state) => state.channels);
-  const currentChannelId = channels.current;
   const { socket } = useWebsocket();
   const { t } = useTranslation();
-
-  const handleAddButtonClick = () => {
-    dispatch(showNewChannelModal());
-  };
+  const channels = useSelector((state) => state.channels);
+  const currentChannelId = channels.current;
 
   const handleClick = (id) => () => dispatch(selectChannel({ channelId: id }));
 
@@ -180,59 +176,82 @@ const Channels = () => {
     }
   };
 
-  const renderChannels = () => {
-    const items = channels.ids.map((id) => {
-      const channel = channels.entities[id];
+  const items = channels.ids.map((id) => {
+    const channel = channels.entities[id];
 
-      const isCurrent = currentChannelId === id;
+    const isCurrent = currentChannelId === id;
 
-      const btnVariant = isCurrent ? 'secondary' : null;
+    const btnVariant = isCurrent ? 'secondary' : null;
 
-      const btn = channel.removable ? (
-        <Dropdown as={ButtonGroup} className="w-100" onSelect={handleOptionSelect({ id, ...channel })}>
-          <Button
-            className="w-100 rounded-0 text-start"
-            variant={btnVariant}
-            onClick={handleClick(id)}
-          >
-            <span className="me-1">#</span>
-            {channel.name}
-          </Button>
-          <Dropdown.Toggle
-            split
-            id="channel-options"
-            variant={btnVariant}
-            className="rounded-0"
-          />
-          <Dropdown.Menu>
-            <Dropdown.Item eventKey="remove">
-              {t('channels.remove')}
-            </Dropdown.Item>
-            <Dropdown.Item eventKey="rename">
-              {t('channels.rename')}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      ) : (
+    const btn = channel.removable ? (
+      <Dropdown as={ButtonGroup} className="w-100" onSelect={handleOptionSelect({ id, ...channel })}>
         <Button
-          variant={btnVariant}
           className="w-100 rounded-0 text-start"
+          variant={btnVariant}
           onClick={handleClick(id)}
         >
           <span className="me-1">#</span>
           {channel.name}
         </Button>
-      );
+        <Dropdown.Toggle
+          split
+          id="channel-options"
+          variant={btnVariant}
+          className="rounded-0"
+        />
+        <Dropdown.Menu>
+          <Dropdown.Item eventKey="remove">
+            {t('channels.remove')}
+          </Dropdown.Item>
+          <Dropdown.Item eventKey="rename">
+            {t('channels.rename')}
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    ) : (
+      <Button
+        variant={btnVariant}
+        className="w-100 rounded-0 text-start"
+        onClick={handleClick(id)}
+      >
+        <span className="me-1">#</span>
+        {channel.name}
+      </Button>
+    );
 
-      return (
-        <Nav.Item key={id} className="w-100">
-          {btn}
-        </Nav.Item>
-      );
+    return (
+      <Nav.Item key={id} className="w-100">
+        {btn}
+      </Nav.Item>
+    );
+  });
+
+  return <Nav variant="pills" className="flex-column">{items}</Nav>;
+};
+
+const Channels = () => {
+  const dispatch = useDispatch();
+  const channels = useSelector((state) => state.channels);
+  const { socket } = useWebsocket();
+  const { t } = useTranslation();
+
+  const handleAddButtonClick = () => {
+    dispatch(showNewChannelModal());
+  };
+
+  React.useEffect(() => {
+    socket.on('newChannel', (data) => {
+      dispatch(addChannel(data));
     });
 
-    return <Nav variant="pills" className="flex-column">{items}</Nav>;
-  };
+    socket.on('removeChannel', ({ id }) => {
+      dispatch(removeChannel(id));
+    });
+
+    socket.on('renameChannel', (data) => {
+      dispatch(renameChannel(data));
+    });
+  }, []);
 
   return (
     <>
@@ -261,7 +280,7 @@ const Channels = () => {
             </div>
           )}
         </div>
-        {channels.loading === 'idle' && renderChannels()}
+        {channels.loading === 'idle' && <ChannelsList />}
       </div>
       <NewChannelModal />
       <RenameChannelModal />
