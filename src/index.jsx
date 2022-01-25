@@ -2,7 +2,6 @@
 
 import 'core-js/stable/index.js';
 import 'regenerator-runtime/runtime.js';
-import React from 'react';
 import ReactDOM from 'react-dom';
 import io from 'socket.io-client';
 
@@ -14,6 +13,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const socket = io('/');
-const App = init(socket);
+const app = init(socket);
 
-ReactDOM.render(<App />, document.querySelector('#chat'));
+ReactDOM.render(app, document.querySelector('#chat'));
