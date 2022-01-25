@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 
 import {
   selectChannel, addChannel, removeChannel, renameChannel,
+  setAdding, setRemoving, setRenaming,
 } from '../slices/channelsSlice';
 import {
   showNewChannelModal, showRenameChannelModal, hideModal,
@@ -38,16 +39,17 @@ const NewChannelModal = () => {
   const handleNewChannelSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(addChannel((done) => {
-      if (channelNames.includes(name)) throw new Error('channelExists');
-      socket.emit('newChannel', { name }, ({ data }) => {
-        done(data);
-        setName('');
-        dispatch(hideModal());
-        dispatch(selectChannel({ channelId: data.id })); // TODO: move to slice
-        toast.success(t('channels.added'));
-      });
-    }));
+    if (channelNames.includes(name)) throw new Error('channelExists');
+
+    dispatch(setAdding('loading'));
+    socket.emit('newChannel', { name }, ({ data }) => {
+      dispatch(addChannel(data));
+      dispatch(setAdding('idle'));
+      setName('');
+      dispatch(hideModal());
+      dispatch(selectChannel({ channelId: data.id })); // TODO: move to slice
+      toast.success(t('channels.added'));
+    });
   };
 
   const handleNewChannelNameChange = (e) => {
@@ -108,14 +110,14 @@ const RenameChannelModal = () => {
   const handleRenameChannelSubmit = (e) => {
     e.preventDefault();
     const payload = { id: channel.id, name };
-    dispatch(renameChannel((done) => {
-      socket.emit('renameChannel', payload, () => {
-        done(payload);
-        setName('');
-        dispatch(hideModal());
-        toast.success(t('channels.renamed'));
-      });
-    }));
+    dispatch(setRenaming('loading'));
+    socket.emit('renameChannel', payload, () => {
+      dispatch(renameChannel(payload));
+      dispatch(setRenaming('idle'));
+      setName('');
+      dispatch(hideModal());
+      toast.success(t('channels.renamed'));
+    });
   };
 
   const handleNewChannelNameChange = (e) => {
@@ -165,13 +167,13 @@ const Channels = () => {
   const handleOptionSelect = (channel) => (eventKey) => {
     if (eventKey === 'remove') {
       const { id } = channel;
-      dispatch(removeChannel((done) => {
-        socket.emit('removeChannel', { id }, () => {
-          done(id);
-          if (currentChannelId === id) dispatch(selectChannel({ channelId: 1 }));
-          toast.success(t('channels.removed'));
-        });
-      }));
+      dispatch(setRemoving('loading'));
+      socket.emit('removeChannel', { id }, () => {
+        dispatch(removeChannel(id));
+        dispatch(setRemoving('idle'));
+        if (currentChannelId === id) dispatch(selectChannel({ channelId: 1 }));
+        toast.success(t('channels.removed'));
+      });
     }
     if (eventKey === 'rename') {
       dispatch(showRenameChannelModal({ channel }));

@@ -24,7 +24,7 @@ const messagesSlice = createSlice({
       state.items = payload.messages;
     });
 
-    builder.addCase(removeChannel.fulfilled, (state, { payload }) => {
+    builder.addCase(removeChannel, (state, { payload }) => {
       const id = payload;
       state.items = state.items.filter((msg) => msg.channelId !== id);
     });
