@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router, Routes, Route, Navigate,
   useLocation,
 } from 'react-router-dom';
-import io from 'socket.io-client';
 import { I18nextProvider } from 'react-i18next';
 import { ToastContainer } from 'react-toastify';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
@@ -16,11 +15,8 @@ import NotFoundPage from './NotFoundPage';
 import authContext, { websocketContext } from '../contexts';
 import useAuth from '../hooks';
 import store from '../slices';
-import init from '../init';
 
 const packageInfo = require('../../package.json');
-
-const { i18n } = init();
 
 const rollbarConfig = {
   accessToken: 'a424f7d0810545acaff4f5655c0bcdd3',
@@ -32,21 +28,13 @@ const rollbarConfig = {
   },
 };
 
-const WebsocketProvider = ({ children }) => {
-  const [socket, setSocket] = React.useState(null);
-
-  React.useEffect(() => {
-    setSocket(io('/'));
-  }, []);
-
-  return (
-    <websocketContext.Provider
-      value={{ socket }}
-    >
-      {children}
-    </websocketContext.Provider>
-  );
-};
+const WebsocketProvider = ({ children, socket }) => (
+  <websocketContext.Provider
+    value={{ socket }}
+  >
+    {children}
+  </websocketContext.Provider>
+);
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = React.useState(false);
@@ -95,14 +83,14 @@ const LoginRoute = ({ children }) => {
   return children;
 };
 
-const wrapWithProviders = (element) => (
+const withProviders = (WrappedComponent) => ({ socket, i18n }) => (
   <RollbarProvider config={rollbarConfig}>
     <ErrorBoundary>
       <AuthProvider>
-        <WebsocketProvider>
+        <WebsocketProvider socket={socket}>
           <ReduxProvider store={store}>
             <I18nextProvider i18n={i18n}>
-              {element}
+              <WrappedComponent />
               <ToastContainer />
             </I18nextProvider>
           </ReduxProvider>
@@ -112,7 +100,7 @@ const wrapWithProviders = (element) => (
   </RollbarProvider>
 );
 
-const App = () => wrapWithProviders(
+const App = () => (
   <Router>
     <Routes>
       <Route
@@ -144,7 +132,7 @@ const App = () => wrapWithProviders(
       />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
-  </Router>,
+  </Router>
 );
 
-export default App;
+export default withProviders(App);

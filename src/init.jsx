@@ -1,10 +1,12 @@
+import React from 'react';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import filter from 'leo-profanity';
 
 import ru from './locale.ru.json';
+import App from './components/App';
 
-const init = () => {
+const init = (socket) => {
   const i18n = i18next.createInstance();
 
   i18n
@@ -16,7 +18,7 @@ const init = () => {
 
   filter.loadDictionary('ru');
 
-  return { i18n };
+  return <App socket={socket} i18n={i18n} />;
 };
 
 export default init;
