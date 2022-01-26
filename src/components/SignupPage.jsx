@@ -3,7 +3,7 @@ import {
   Container, Row, Col, Form, Stack, Button,
   Navbar,
 } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import axios from 'axios';
@@ -90,7 +90,7 @@ const SignupPage = () => {
       )}
       <Stack direction="horizontal" gap={3}>
         <Button type="submit">{t('auth.register')}</Button>
-        <div><a href="/login">{t('auth.login')}</a></div>
+        <div><Link to="/login">{t('auth.login')}</Link></div>
       </Stack>
     </Form>
   );

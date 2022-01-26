@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
   Form, Button, Container, Row, Col, Stack,
   Navbar,
@@ -86,7 +86,7 @@ const LoginPage = () => {
         </Form.Group>
         <Stack direction="horizontal" gap={3}>
           <Button type="submit">{t('auth.login')}</Button>
-          <div><a href="/signup">{t('auth.registerPage')}</a></div>
+          <div><Link to="/signup">{t('auth.registerPage')}</Link></div>
         </Stack>
       </Stack>
     </Form>
