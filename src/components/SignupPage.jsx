@@ -58,24 +58,25 @@ const SignupPage = () => {
         {
           type: 'text',
           name: 'username',
-          placeholder: t('auth.username'),
+          label: t('auth.username'),
         },
         {
           type: 'password',
           name: 'password',
-          placeholder: t('auth.password'),
+          label: t('auth.password'),
         },
         {
           type: 'password',
           name: 'passwordConfirm',
-          placeholder: t('auth.passwordConfirm'),
+          label: t('auth.passwordConfirm'),
         },
-      ].map(({ name, type, placeholder }) => (
+      ].map(({ name, type, label }) => (
         <Form.Group key={name} className="mb-2">
           <Form.Control
             type={type}
             name={name}
-            placeholder={placeholder}
+            placeholder={label}
+            aria-label={label}
             onChange={formik.handleChange}
             value={formik.values[name]}
           />

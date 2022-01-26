@@ -64,6 +64,7 @@ const LoginPage = () => {
             type="text"
             name="username"
             placeholder={t('auth.username')}
+            aria-label={t('auth.username')}
             required
             onChange={formik.handleChange}
             value={formik.values.username}
@@ -75,6 +76,7 @@ const LoginPage = () => {
             type="password"
             name="password"
             placeholder={t('auth.password')}
+            aria-label={t('auth.password')}
             required
             onChange={formik.handleChange}
             value={formik.values.password}
