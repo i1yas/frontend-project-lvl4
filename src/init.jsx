@@ -16,7 +16,9 @@ const init = (socket) => {
       lng: 'ru',
     });
 
-  filter.loadDictionary('ru');
+  filter
+    .add(filter.getDictionary('ru'))
+    .add(filter.getDictionary('en'));
 
   return <App socket={socket} i18n={i18n} />;
 };
