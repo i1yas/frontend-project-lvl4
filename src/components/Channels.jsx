@@ -74,6 +74,7 @@ const NewChannelModal = () => {
             value={name}
             onChange={handleNewChannelNameChange}
             ref={ref}
+            aria-label={t('channels.name')}
           />
           {adding === 'error' && (
             <Form.Text className="w-100 text-danger">{t(`formErrors.${error.message}`)}</Form.Text>
@@ -84,7 +85,7 @@ const NewChannelModal = () => {
             variant="primary"
             disabled={adding === 'loading'}
           >
-            {t('form.add')}
+            {t('form.send')}
           </Button>
         </Modal.Footer>
       </Form>
@@ -144,7 +145,7 @@ const RenameChannelModal = () => {
             ref={ref}
           />
           <Button variant="secondary" onClick={handleClose}>{t('form.cancel')}</Button>
-          <Button type="submit" variant="primary">{t('form.save')}</Button>
+          <Button type="submit" variant="primary">{t('form.send')}</Button>
         </Modal.Footer>
       </Form>
     </Modal>
@@ -198,12 +199,13 @@ const ChannelsList = () => {
           id="channel-options"
           variant={btnVariant}
           className="rounded-0"
+          aria-label={t('channels.manage')}
         />
         <Dropdown.Menu>
-          <Dropdown.Item eventKey="remove">
+          <Dropdown.Item eventKey="remove" aria-label={t('channels.add')}>
             {t('channels.remove')}
           </Dropdown.Item>
-          <Dropdown.Item eventKey="rename">
+          <Dropdown.Item eventKey="rename" aria-label={t('channels.remove')}>
             {t('channels.rename')}
           </Dropdown.Item>
         </Dropdown.Menu>
@@ -270,6 +272,7 @@ const Channels = () => {
               variant={false}
               onClick={handleAddButtonClick}
               className="p-0 m-0 text-primary"
+              aria-label="+"
             >
               <PlusIcon width={20} height={20} />
             </Button>
