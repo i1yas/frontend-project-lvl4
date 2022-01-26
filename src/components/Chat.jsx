@@ -63,6 +63,8 @@ const Input = () => {
           ref={ref}
           value={rawText}
           onChange={handleChange}
+          placeholder={t('chat.newMessage')}
+          aria-label={t('chat.newMessage')}
         />
         <Button type="submit" variant="outline-primary" aria-label={t('chat.send')}>
           <ArrowRightIcon width={24} height={24} />

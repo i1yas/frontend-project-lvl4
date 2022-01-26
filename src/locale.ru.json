@@ -19,7 +19,8 @@
             "message_one": "сообщение",
             "message_few": "сообщения",
             "message_many": "сообщений",
-            "send": "Отправить"
+            "send": "Отправить",
+            "newMessage": "Новое сообщение"
         },
         "auth": {
             "logout": "Выйти",
