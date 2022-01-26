@@ -99,7 +99,7 @@ const SignupPage = () => {
     <Container className="my-4">
       <Row>
         <Col className="mb-4">
-          <Navbar.Brand>{t('app.title')}</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/">{t('app.title')}</Navbar.Brand>
         </Col>
       </Row>
       <Row>
