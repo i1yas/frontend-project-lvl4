@@ -26,7 +26,8 @@
             "login": "Войти",
             "register": "Зарегистрироваться",
             "registerPage": "Регистрация",
-            "username": "Ваш ник",
+            "yourNick": "Ваш ник",
+            "username": "Имя пользователя",
             "password": "Пароль",
             "passwordConfirm": "Подтвердите пароль"
         },

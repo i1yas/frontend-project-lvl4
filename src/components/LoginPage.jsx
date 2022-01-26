@@ -63,8 +63,8 @@ const LoginPage = () => {
           <Form.Control
             type="text"
             name="username"
-            placeholder={t('auth.username')}
-            aria-label={t('auth.username')}
+            placeholder={t('auth.yourNick')}
+            aria-label={t('auth.yourNick')}
             required
             onChange={formik.handleChange}
             value={formik.values.username}
