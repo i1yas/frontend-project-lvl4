@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Form, Button, Container, Row, Col, Stack,
+  Navbar,
 } from 'react-bootstrap';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -91,6 +92,11 @@ const LoginPage = () => {
 
   return (
     <Container className="my-4">
+      <Row>
+        <Col className="mb-4">
+          <Navbar.Brand>{t('app.title')}</Navbar.Brand>
+        </Col>
+      </Row>
       <Row>
         <Col md="auto">{form}</Col>
       </Row>

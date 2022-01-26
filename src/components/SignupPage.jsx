@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Container, Row, Col, Form, Stack, Button,
+  Navbar,
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -95,6 +96,11 @@ const SignupPage = () => {
 
   return (
     <Container className="my-4">
+      <Row>
+        <Col className="mb-4">
+          <Navbar.Brand>{t('app.title')}</Navbar.Brand>
+        </Col>
+      </Row>
       <Row>
         <Col md={3}>{form}</Col>
       </Row>
