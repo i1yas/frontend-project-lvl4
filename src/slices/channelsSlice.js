@@ -65,6 +65,7 @@ const channelsSlice = createSlice({
         Object.assign(state, normalizeItems(action.payload.channels));
         state.loading = 'idle';
         state.loadingError = null;
+        if (!state.entities[state.current]) state.current = 1;
       })
       .addCase(fetchData.rejected, (state, action) => {
         state.loading = 'error';
