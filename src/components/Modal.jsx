@@ -3,7 +3,7 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 
-const getContainer = () => document.getElementById('chat');
+const getContainer = () => document.querySelector('body > div');
 
 const CustomModal = (props) => {
   const onEnter = () => {
