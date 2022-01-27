@@ -6,15 +6,15 @@ import { Modal } from 'react-bootstrap';
 const getContainer = () => document.querySelector('body > div');
 
 const CustomModal = (props) => {
-  const onEnter = () => {
+  const onShow = () => {
     const container = getContainer();
     container.ariaHidden = true;
   };
-  const onExit = () => {
+  const onHide = () => {
     const container = getContainer();
     container.ariaHidden = false;
   };
-  const newProps = { ...props, onEnter, onExit };
+  const newProps = { ...props, onShow, onHide };
 
   return <Modal {...newProps} />;
 };
