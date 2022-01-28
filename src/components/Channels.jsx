@@ -268,6 +268,7 @@ const ChannelsList = () => {
 const Channels = () => {
   const dispatch = useDispatch();
   const channels = useSelector((state) => state.channels);
+  const error = channels.loadingError;
   const { socket } = useWebsocket();
   const { t } = useTranslation();
 
@@ -314,6 +315,11 @@ const Channels = () => {
           {channels.loading === 'loading' && (
             <div className="text-muted">
               Loading channels
+            </div>
+          )}
+          {error && (
+            <div className="text-muted">
+              {t('errors.connection')}
             </div>
           )}
         </div>
