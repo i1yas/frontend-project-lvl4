@@ -72,7 +72,7 @@ const LoginRoute = ({ children }) => {
     if (userId) {
       auth.logIn();
     }
-  }, []);
+  }, [auth, userId]);
 
   if (auth.loggedIn) {
     const from = location.state?.from || { pathname: '/' };
@@ -83,22 +83,26 @@ const LoginRoute = ({ children }) => {
   return children;
 };
 
-const withProviders = (WrappedComponent) => ({ socket, i18n }) => (
-  <RollbarProvider config={rollbarConfig}>
-    <ErrorBoundary>
-      <AuthProvider>
-        <WebsocketProvider socket={socket}>
-          <ReduxProvider store={store}>
-            <I18nextProvider i18n={i18n}>
-              <WrappedComponent />
-              <ToastContainer />
-            </I18nextProvider>
-          </ReduxProvider>
-        </WebsocketProvider>
-      </AuthProvider>
-    </ErrorBoundary>
-  </RollbarProvider>
-);
+const withProviders = (WrappedComponent) => {
+  const WithProviders = ({ socket, i18n }) => (
+    <RollbarProvider config={rollbarConfig}>
+      <ErrorBoundary>
+        <AuthProvider>
+          <WebsocketProvider socket={socket}>
+            <ReduxProvider store={store}>
+              <I18nextProvider i18n={i18n}>
+                <WrappedComponent />
+                <ToastContainer />
+              </I18nextProvider>
+            </ReduxProvider>
+          </WebsocketProvider>
+        </AuthProvider>
+      </ErrorBoundary>
+    </RollbarProvider>
+  );
+  WithProviders.displayName = 'WithProviders';
+  return WithProviders;
+};
 
 const App = () => (
   <Router>

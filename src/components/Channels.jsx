@@ -106,7 +106,7 @@ const RenameChannelModal = () => {
   React.useEffect(() => {
     if (channel) setName(channel.name);
     if (show) ref.current.focus();
-  }, [show]);
+  }, [show, channel]);
 
   const handleRenameChannelSubmit = (e) => {
     e.preventDefault();
@@ -288,7 +288,7 @@ const Channels = () => {
     socket.on('renameChannel', (data) => {
       dispatch(renameChannel(data));
     });
-  }, []);
+  }, [socket]);
 
   return (
     <>

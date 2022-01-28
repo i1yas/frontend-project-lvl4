@@ -43,7 +43,7 @@ const Input = () => {
     socket.on('newMessage', (payload) => {
       dispatch(addMessage(payload));
     });
-  }, []);
+  }, [dispatch, socket]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

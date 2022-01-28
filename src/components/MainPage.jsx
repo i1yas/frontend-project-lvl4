@@ -47,7 +47,7 @@ const MainPage = () => {
       .catch(() => {
         toast(t('errors.fetchData'));
       });
-  }, []);
+  }, [dispatch, t]);
 
   return (
     <>
