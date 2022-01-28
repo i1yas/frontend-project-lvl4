@@ -4,12 +4,12 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Dropdown, Button, ButtonGroup, Nav, Form,
+  Modal,
 } from 'react-bootstrap';
 import PlusIcon from 'bootstrap-icons/icons/plus-square.svg';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
-import Modal from './Modal';
 import {
   selectChannel, addChannel, removeChannel, renameChannel,
   setAdding, setRemoving, setRenaming,
@@ -144,6 +144,7 @@ const RenameChannelModal = () => {
             value={name}
             onChange={handleNewChannelNameChange}
             ref={ref}
+            aria-label={t('channels.name')}
           />
           <Button variant="secondary" onClick={handleClose}>{t('form.cancel')}</Button>
           <Button type="submit" variant="primary">{t('form.send')}</Button>
