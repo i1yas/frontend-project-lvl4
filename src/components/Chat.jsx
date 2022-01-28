@@ -33,6 +33,7 @@ const Input = () => {
   const dispatch = useDispatch();
   const ref = React.useRef(null);
   const { t } = useTranslation();
+  const isModalOpen = useSelector((state) => !!state.ui.modal.name);
 
   React.useEffect(() => {
     ref.current.focus();
@@ -57,7 +58,7 @@ const Input = () => {
   };
 
   return (
-    <Form className="mt-auto" onSubmit={handleSubmit}>
+    <Form className="mt-auto" onSubmit={handleSubmit} aria-hidden={isModalOpen}>
       <InputGroup>
         <FormControl
           ref={ref}

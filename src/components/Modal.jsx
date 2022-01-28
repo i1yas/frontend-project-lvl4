@@ -3,23 +3,27 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 
-const getContainer = () => document.querySelector('body > div');
+// const getContainer = () => document.querySelector('body > div');
 
-const CustomModal = (props) => {
-  const { show } = props;
+// const CustomModal = (props) => {
+//   const { show } = props;
 
-  React.useEffect(() => {
-    const container = getContainer();
-    container.ariaHidden = Boolean(show);
-  }, [show]);
+//   React.useEffect(() => {
+//     const container = getContainer();
+//     if (show) container.ariaHidden = true;
+//     else delete container.ariaHidden;
+//   }, [show]);
 
-  return <Modal {...props} />;
-};
+//   // const newProps = { ...props, 'aria-hidden': !show };
 
-Object.keys(Modal)
-  .filter((key) => key.match(/^[A-Z].*/))
-  .forEach((key) => {
-    CustomModal[key] = Modal[key];
-  });
+//   return <Modal {...props} />;
+// };
 
-export default CustomModal;
+
+// Object.keys(Modal)
+//   .filter((key) => key.match(/^[A-Z].*/))
+//   .forEach((key) => {
+//     CustomModal[key] = Modal[key];
+//   });
+
+export default Modal;
