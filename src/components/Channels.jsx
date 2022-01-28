@@ -236,10 +236,10 @@ const ChannelsList = () => {
           aria-label={t('channels.manage')}
         />
         <Dropdown.Menu>
-          <Dropdown.Item eventKey="remove" aria-label={t('channels.add')}>
+          <Dropdown.Item eventKey="remove" aria-label={t('channels.remove')}>
             {t('channels.remove')}
           </Dropdown.Item>
-          <Dropdown.Item eventKey="rename" aria-label={t('channels.remove')}>
+          <Dropdown.Item eventKey="rename" aria-label={t('channels.rename')}>
             {t('channels.rename')}
           </Dropdown.Item>
         </Dropdown.Menu>
