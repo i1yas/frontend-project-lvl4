@@ -10,6 +10,7 @@
             "add": "Добавить",
             "remove": "Удалить",
             "removeChannel": "Удалить канал",
+            "removeChannelConfirmation": "Вы хотите удалить канал {{name}}?",
             "rename": "Переименовать",
             "renameChannel": "Переименовать канал",
             "addChannel": "Добавить канал",

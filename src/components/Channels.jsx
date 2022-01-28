@@ -15,7 +15,7 @@ import {
   setAdding, setRemoving, setRenaming,
 } from '../slices/channelsSlice';
 import {
-  showNewChannelModal, showRenameChannelModal, hideModal,
+  showNewChannelModal, showRenameChannelModal, showRemoveChannelModal, hideModal,
 } from '../slices/uiSlice';
 import { useWebsocket } from '../hooks';
 
@@ -44,11 +44,10 @@ const NewChannelModal = () => {
 
     dispatch(setAdding('loading'));
     socket.emit('newChannel', { name }, ({ data }) => {
-      dispatch(addChannel(data));
       dispatch(setAdding('idle'));
       setName('');
       dispatch(hideModal());
-      dispatch(selectChannel({ channelId: data.id })); // TODO: move to slice
+      dispatch(selectChannel({ channelId: data.id }));
       toast.success(t('channels.added'));
     });
   };
@@ -114,7 +113,6 @@ const RenameChannelModal = () => {
     const payload = { id: channel.id, name };
     dispatch(setRenaming('loading'));
     socket.emit('renameChannel', payload, () => {
-      dispatch(renameChannel(payload));
       dispatch(setRenaming('idle'));
       setName('');
       dispatch(hideModal());
@@ -154,9 +152,49 @@ const RenameChannelModal = () => {
   );
 };
 
-const ChannelsList = () => {
+const RemoveChannelModal = () => {
   const dispatch = useDispatch();
   const { socket } = useWebsocket();
+  const modal = useSelector((state) => state.ui.modal);
+  const show = modal.name === 'removeChannel';
+  const { channel } = modal;
+  const { t } = useTranslation();
+
+  const handleRenameChannelSubmit = (e) => {
+    e.preventDefault();
+    const payload = { id: channel.id };
+    dispatch(setRemoving('loading'));
+    socket.emit('removeChannel', payload, () => {
+      dispatch(setRemoving('idle'));
+      dispatch(hideModal());
+      toast.success(t('channels.removed'));
+    });
+  };
+
+  const handleClose = () => {
+    dispatch(hideModal());
+  };
+
+  return (
+    <Modal show={show} onHide={handleClose} autoFocus>
+      <Form onSubmit={handleRenameChannelSubmit}>
+        <Modal.Header>
+          <Modal.Title>{t('channels.removeChannel')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>{t('channels.removeChannelConfirmation', { name: channel?.name })}</div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>{t('form.cancel')}</Button>
+          <Button type="submit" variant="primary">{t('channels.remove')}</Button>
+        </Modal.Footer>
+      </Form>
+    </Modal>
+  );
+};
+
+const ChannelsList = () => {
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const channels = useSelector((state) => state.channels);
   const currentChannelId = channels.current;
@@ -165,14 +203,7 @@ const ChannelsList = () => {
 
   const handleOptionSelect = (channel) => (eventKey) => {
     if (eventKey === 'remove') {
-      const { id } = channel;
-      dispatch(setRemoving('loading'));
-      socket.emit('removeChannel', { id }, () => {
-        dispatch(removeChannel(id));
-        dispatch(setRemoving('idle'));
-        if (currentChannelId === id) dispatch(selectChannel({ channelId: 1 }));
-        toast.success(t('channels.removed'));
-      });
+      dispatch(showRemoveChannelModal({ channel }));
     }
     if (eventKey === 'rename') {
       dispatch(showRenameChannelModal({ channel }));
@@ -289,6 +320,7 @@ const Channels = () => {
       </div>
       <NewChannelModal />
       <RenameChannelModal />
+      <RemoveChannelModal />
     </>
   );
 };

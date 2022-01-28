@@ -23,6 +23,12 @@ const uiSlice = createSlice({
         channel: payload.channel,
       };
     },
+    showRemoveChannelModal: (state, { payload }) => {
+      state.modal = {
+        name: 'removeChannel',
+        channel: payload.channel,
+      };
+    },
     hideModal: (state) => {
       state.modal = initialState.modal;
     },
@@ -32,6 +38,7 @@ const uiSlice = createSlice({
 export const {
   showNewChannelModal,
   showRenameChannelModal,
+  showRemoveChannelModal,
   hideModal,
 } = uiSlice.actions;
 
