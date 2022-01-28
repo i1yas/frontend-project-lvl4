@@ -198,6 +198,7 @@ const ChannelsList = () => {
   const { t } = useTranslation();
   const channels = useSelector((state) => state.channels);
   const currentChannelId = channels.current;
+  const isModalOpen = useSelector((state) => !!state.ui.modal.name);
 
   const handleClick = (id) => () => dispatch(selectChannel({ channelId: id }));
 
@@ -261,7 +262,7 @@ const ChannelsList = () => {
     );
   });
 
-  return <Nav variant="pills" className="flex-column">{items}</Nav>;
+  return <Nav variant="pills" className="flex-column" aria-hidden={isModalOpen}>{items}</Nav>;
 };
 
 const Channels = () => {
